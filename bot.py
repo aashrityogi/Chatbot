@@ -6,6 +6,11 @@ TELEGRAM_TOKEN = "APNA_TELEGRAM_BOT_TOKEN"
 OPENAI_API_KEY = "APNA_OPENAI_KEY"
 
 openai.api_key = OPENAI_API_KEY
+def start(update, context):
+    update.message.reply_text(
+        "Hello sir/mem. I am a special chatbot made by *Mr. Anonymous*.\nAap kaise ho?",
+        parse_mode="Markdown"
+    )
 
 def ai_reply(update, context):
     user_msg = update.message.text
