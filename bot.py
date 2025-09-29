@@ -3,7 +3,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # ================================
 # Yaha apni keys daalo
-TELEGRAM_TOKEN = "APNA_TELEGRAM_BOT_TOKEN"
+TELEGRAM_TOKEN = "8031671164:AAHQUTF-RN7_GP_MinE7UQVy0ZVkbQkzapg"
 OPENAI_API_KEY = "APNA_OPENAI_KEY"
 # ================================
 
