@@ -3,7 +3,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Telegram aur OpenAI tokens
 TELEGRAM_TOKEN = "APNA_TELEGRAM_BOT_TOKEN"
-OPENAI_API_KEY = "APNA_OPENAI_KEY"
+OPENAI_API_KEY = "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"
 
 openai.api_key = OPENAI_API_KEY
 
