@@ -1,48 +1,51 @@
-import openai
+import requests
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-# Telegram aur OpenAI tokens
-TELEGRAM_TOKEN = "8031671164:AAHQUTF-RN7_GP_MinE7UQVy0ZVkbQkzapg"
-OPENAI_API_KEY = "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"
+# ================================
+# Yaha apni keys daalo
+TELEGRAM_TOKEN = "APNA_TELEGRAM_BOT_TOKEN"
+OPENAI_API_KEY = "APNA_OPENAI_KEY"
+# ================================
 
-openai.api_key = OPENAI_API_KEY
-
-# Start command
+# /start command - intro message
 def start(update, context):
     update.message.reply_text(
         "Hello sir/mem. I am a special chatbot made by *Mr. Anonymous*.\nAap kaise ho?",
         parse_mode="Markdown"
     )
 
-# End command
+# /end command - chat end message
 def end_chat(update, context):
     update.message.reply_text(
         "Chat end ho gaya hai. Phir milte hain! 👋",
         parse_mode="Markdown"
     )
 
-# AI auto-reply function
+# AI reply using REST API
 def ai_reply(update, context):
     user_msg = update.message.text
 
-    # Agar user ne /end nahi diya
+    # Agar user /end command bhej de
     if user_msg.lower() == "/end":
         end_chat(update, context)
         return
 
+    url = "https://api.openai.com/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": user_msg}]
+    }
+
     try:
-        # OpenAI se reply le
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": user_msg}]
-        )
+        response = requests.post(url, headers=headers, json=data).json()
         reply = response["choices"][0]["message"]["content"]
-
-        # Bot reply ke end me ye add kar rahe
+        # Reply ke end me signature
         reply += "\n\n— Bot powered by Mr. Anonymous"
-
         update.message.reply_text(reply)
-
     except Exception as e:
         update.message.reply_text("Error: " + str(e))
 
