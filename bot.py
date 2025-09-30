@@ -1,33 +1,34 @@
 import requests
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
 # ================================
 # Yaha apni keys daalo
-TELEGRAM_TOKEN = "8031671164:AAHQUTF-RN7_GP_MinE7UQVy0ZVkbQkzapg"
-OPENAI_API_KEY = "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"
+TELEGRAM_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"
 # ================================
 
 # /start command - intro message
-def start(update, context):
-    update.message.reply_text(
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
         "Hello sir/mem. I am a special chatbot made by *Mr. Anonymous*.\nAap kaise ho?",
         parse_mode="Markdown"
     )
 
 # /end command - chat end message
-def end_chat(update, context):
-    update.message.reply_text(
+async def end_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
         "Chat end ho gaya hai. Phir milte hain! 👋",
         parse_mode="Markdown"
     )
 
-# AI reply using REST API
-def ai_reply(update, context):
+# AI reply using OpenAI REST API
+async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_msg = update.message.text
 
     # Agar user /end command bhej de
     if user_msg.lower() == "/end":
-        end_chat(update, context)
+        await end_chat(update, context)
         return
 
     url = "https://api.openai.com/v1/chat/completions"
@@ -43,23 +44,21 @@ def ai_reply(update, context):
     try:
         response = requests.post(url, headers=headers, json=data).json()
         reply = response["choices"][0]["message"]["content"]
-        # Reply ke end me signature
         reply += "\n\n— Bot powered by Mr. Anonymous"
-        update.message.reply_text(reply)
+        await update.message.reply_text(reply)
     except Exception as e:
-        update.message.reply_text("Error: " + str(e))
+        await update.message.reply_text("Error: " + str(e))
 
 # Main bot setup
 def main():
-    updater = Updater(TELEGRAM_TOKEN, use_context=True)
-    dp = updater.dispatcher
+    app = Application.builder().token(TELEGRAM_TOKEN).build()
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("end", end_chat))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, ai_reply))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("end", end_chat))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, ai_reply))
 
-    updater.start_polling()
-    updater.idle()
+    print("🤖 Bot started... Press CTRL+C to stop.")
+    app.run_polling()
 
 if __name__ == "__main__":
     main()
