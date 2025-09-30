@@ -4,7 +4,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 # ================================
 # Yaha apni keys daalo
 TELEGRAM_TOKEN = "8031671164:AAHQUTF-RN7_GP_MinE7UQVy0ZVkbQkzapg"
-OPENAI_API_KEY = "OPENAI_API_KEY"
+OPENAI_API_KEY = "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"
 # ================================
 
 # /start command - intro message
